@@ -20,10 +20,10 @@ func TestResolver(t *testing.T) {
 	require.NoError(t, err)
 
 	tlsConfig, err := config.SetupTLSConfig(config.TLSConfig{
-		CertFile: config.ServerCertFile,
-		KeyFile: config.ServerKeyFile,
-		CAFile: config.CAFile,
-		Server: true,
+		CertFile:      config.ServerCertFile,
+		KeyFile:       config.ServerKeyFile,
+		CAFile:        config.CAFile,
+		Server:        true,
 		ServerAddress: "127.0.0.1",
 	})
 	require.NoError(t, err)
@@ -41,10 +41,10 @@ func TestResolver(t *testing.T) {
 
 	conn := &clientConn{}
 	tlsConfig, err = config.SetupTLSConfig(config.TLSConfig{
-		CertFile: config.RootClientCertFile,
-		KeyFile: config.RootClientKeyFile,
-		CAFile: config.CAFile,
-		Server: false,
+		CertFile:      config.RootClientCertFile,
+		KeyFile:       config.RootClientKeyFile,
+		CAFile:        config.CAFile,
+		Server:        false,
 		ServerAddress: "127.0.0.1",
 	})
 	require.NoError(t, err)
@@ -65,10 +65,10 @@ func TestResolver(t *testing.T) {
 
 	wantState := resolver.State{
 		Addresses: []resolver.Address{{
-			Addr: "localhost:9001",
+			Addr:       "localhost:9001",
 			Attributes: attributes.New("is_leader", true),
 		}, {
-			Addr: "localhost:9002",
+			Addr:       "localhost:9002",
 			Attributes: attributes.New("is_leader", false),
 		}},
 	}
@@ -80,15 +80,15 @@ func TestResolver(t *testing.T) {
 }
 
 // Mocks
-type getServers struct {}
+type getServers struct{}
 
 func (s *getServers) GetServers() ([]*api.Server, error) {
 	return []*api.Server{{
-		Id: "leader",
-		RpcAddr: "localhost:9001",
+		Id:       "leader",
+		RpcAddr:  "localhost:9001",
 		IsLeader: true,
 	}, {
-		Id: "follower",
+		Id:      "follower",
 		RpcAddr: "localhost:9002",
 	}}, nil
 }

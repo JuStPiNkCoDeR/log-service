@@ -50,6 +50,7 @@ func (r *Resolver) ResolveNow(_ resolver.ResolveNowOptions) {
 			Name,
 			err,
 		)
+		return
 	}
 
 	var addresses []resolver.Address
@@ -64,7 +65,7 @@ func (r *Resolver) ResolveNow(_ resolver.ResolveNowOptions) {
 	}
 
 	r.clientConn.UpdateState(resolver.State{
-		Addresses: addresses,
+		Addresses:     addresses,
 		ServiceConfig: r.serviceConfig,
 	})
 }
