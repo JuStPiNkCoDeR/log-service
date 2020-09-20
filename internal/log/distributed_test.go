@@ -6,7 +6,7 @@ package log
 //	"github.com/stretchr/testify/require"
 //	"github.com/travisjeffery/go-dynaport"
 //	"io/ioutil"
-//	api "mafia/log/api/v1"
+//	api "log/api/v1"
 //	"net"
 //	"os"
 //	"reflect"

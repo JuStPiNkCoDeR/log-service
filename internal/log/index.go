@@ -4,7 +4,7 @@ package log
 
 import (
 	"io"
-	"mafia/log/lib"
+	"log/lib"
 	"os"
 
 	"github.com/tysontate/gommap"

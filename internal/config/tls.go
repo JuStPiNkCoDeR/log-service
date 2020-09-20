@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"io/ioutil"
-	"mafia/log/lib"
+	"log/lib"
 )
 
 type TLSConfig struct {

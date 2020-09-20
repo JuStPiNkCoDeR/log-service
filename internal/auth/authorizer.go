@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"mafia/log/lib"
+	"log/lib"
 
 	"fmt"
 

@@ -6,9 +6,9 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/resolver"
 	"google.golang.org/grpc/serviceconfig"
-	api "mafia/log/api/v1"
-	"mafia/log/internal/config"
-	"mafia/log/internal/server"
+	api "log/api/v1"
+	"log/internal/config"
+	"log/internal/server"
 	"net"
 	"testing"
 

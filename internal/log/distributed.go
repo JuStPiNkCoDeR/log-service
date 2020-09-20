@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/gogo/protobuf/proto"
 	"io"
-	api "mafia/log/api/v1"
+	api "log/api/v1"
 	"net"
 
 	"os"

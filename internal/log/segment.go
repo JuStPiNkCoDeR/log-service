@@ -4,8 +4,8 @@ package log
 
 import (
 	"github.com/gogo/protobuf/proto"
-	api "mafia/log/api/v1"
-	"mafia/log/lib"
+	api "log/api/v1"
+	"log/lib"
 
 	"fmt"
 	"os"

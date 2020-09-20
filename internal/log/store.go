@@ -5,7 +5,7 @@ package log
 import (
 	"bufio"
 	"encoding/binary"
-	"mafia/log/lib"
+	"log/lib"
 	"os"
 	"strconv"
 	"sync"

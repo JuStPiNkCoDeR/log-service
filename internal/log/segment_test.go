@@ -4,7 +4,7 @@ package log
 
 import (
 	"github.com/stretchr/testify/require"
-	api "mafia/log/api/v1"
+	api "log/api/v1"
 
 	"io/ioutil"
 	"os"

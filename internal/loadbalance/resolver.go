@@ -4,7 +4,7 @@ import (
 	"context"
 	"google.golang.org/grpc/attributes"
 	"log"
-	api "mafia/log/api/v1"
+	api "log/api/v1"
 
 	"fmt"
 	"sync"

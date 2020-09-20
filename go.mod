@@ -1,4 +1,4 @@
-module mafia/log
+module log
 
 go 1.14
 
@@ -10,6 +10,8 @@ require (
 	github.com/hashicorp/raft-boltdb v0.0.0-20171010151810-6e5ba93211ea
 	github.com/hashicorp/serf v0.9.4
 	github.com/soheilhy/cmux v0.1.4
+	github.com/spf13/cobra v1.0.0
+	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
 	github.com/travisjeffery/go-dynaport v1.0.0
 	github.com/tysontate/gommap v0.0.0-20190103205956-899e1273fb5c

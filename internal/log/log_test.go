@@ -2,7 +2,7 @@ package log
 
 import (
 	"github.com/gogo/protobuf/proto"
-	api "mafia/log/api/v1"
+	api "log/api/v1"
 
 	"io/ioutil"
 	"os"

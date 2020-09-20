@@ -4,8 +4,8 @@ package log
 
 import (
 	"io"
-	api "mafia/log/api/v1"
-	"mafia/log/lib"
+	api "log/api/v1"
+	"log/lib"
 	"os"
 
 	"io/ioutil"

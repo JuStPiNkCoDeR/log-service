@@ -1,8 +1,8 @@
 package server
 
 import (
-	api "mafia/log/api/v1"
-	"mafia/log/lib"
+	api "log/api/v1"
+	"log/lib"
 
 	"context"
 	"google.golang.org/grpc"

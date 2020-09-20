@@ -2,7 +2,7 @@ package discovery
 
 import (
 	"fmt"
-	"mafia/log/lib"
+	"log/lib"
 	"net"
 
 	"github.com/hashicorp/serf/serf"
