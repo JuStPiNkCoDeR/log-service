@@ -278,8 +278,8 @@ func (l *DistributedLog) GetServers() (servers []*api.Server, err error) {
 
 	for _, server := range future.Configuration().Servers {
 		servers = append(servers, &api.Server{
-			Id: string(server.ID),
-			RpcAddr: string(server.Address),
+			Id:       string(server.ID),
+			RpcAddr:  string(server.Address),
 			IsLeader: l.raft.Leader() == server.Address,
 		})
 	}
@@ -338,10 +338,14 @@ func (m *fsm) Snapshot() (raft.FSMSnapshot, error) {
 }
 
 func (m *fsm) Restore(closer io.ReadCloser) error {
+	if err := m.log.Reset(); err != nil {
+		return err
+	}
+
 	b := make([]byte, lenWidth)
 	var buff bytes.Buffer
 
-	for i := 0; ; i++ {
+	for {
 		_, err := io.ReadFull(closer, b)
 		if err == io.EOF {
 			break
@@ -357,14 +361,6 @@ func (m *fsm) Restore(closer io.ReadCloser) error {
 		record := &api.Record{}
 		if err = record.Unmarshal(buff.Bytes()); err != nil {
 			return err
-		}
-
-		if i == 0 {
-			m.log.Config.Segment.InitialOffset = record.Offset
-
-			if err := m.log.Reset(); err != nil {
-				return err
-			}
 		}
 
 		if _, err = m.log.Append(record); err != nil {
@@ -431,12 +427,12 @@ func (l logStore) StoreLog(log *raft.Log) error {
 	return l.StoreLogs([]*raft.Log{log})
 }
 
-func (l logStore) StoreLogs(logs []*raft.Log) error {
-	for _, log := range logs {
+func (l logStore) StoreLogs(records []*raft.Log) error {
+	for _, record := range records {
 		if _, err := l.Append(&api.Record{
-			Value: log.Data,
-			Term:  log.Term,
-			Type:  uint32(log.Type),
+			Value: record.Data,
+			Term:  record.Term,
+			Type:  uint32(record.Type),
 		}); err != nil {
 			return err
 		}
@@ -504,7 +500,7 @@ func (s *StreamLayer) Accept() (net.Conn, error) {
 	}
 
 	// TODO logger here
-	if bytes.Compare([]byte{byte(RaftRPC)}, b) != 0 {
+	if !bytes.Equal([]byte{byte(RaftRPC)}, b) {
 		return nil, fmt.Errorf("not a raft rpc")
 	}
 
