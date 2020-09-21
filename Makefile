@@ -16,6 +16,7 @@ GO_GET=$(GO_CMD) get
 CONTAINER_WORKDIR=/go/src/app
 CONTAINER_BUILD_NAME=$(SERVICE_NAME)-builder
 CONFIG_PATH=${HOME}/.config
+TAG ?= 0.0.1
 ################
 # Binary names #
 ################
@@ -25,7 +26,7 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 # Tasks #
 #########
 .SILENT:
-all: deps protobuf_compile init_ssl test
+all: deps protobuf_compile init_ssl test build-linux
 .PHONY: init_ssl
 init_ssl:
 	echo "Generating SSL certificates..."
@@ -106,16 +107,13 @@ lint-docker:
 		golangci-lint run -v
 build-linux:
 	echo "Building for linux..."
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO_BUILD) -o $(BINARY_NAME) -v
-build-docker:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO_BUILD) -v -o /go/bin/app ./cmd/log
+build-and-run-docker:
 	echo "Building in docker..."
 	cp -r $(LIB_PATH) $(SERVICE_PATH) \
     	&& rm $(SERVICE_PATH)/lib/go.mod \
     	&& rm $(SERVICE_PATH)/lib/go.sum
-	docker build -t $(SERVICE_NAME) .
+	docker build -t $(SERVICE_NAME):$(TAG) .
 	docker run -td \
-		--name $(CONTAINER_BUILD_NAME) $(SERVICE_NAME)
-	docker cp $(CONTAINER_BUILD_NAME):$(CONTAINER_WORKDIR)/api $(SERVICE_PATH)
-	docker rm -f $(CONTAINER_BUILD_NAME)
-run-docker:
-	# Copy build binary and run it
+		--name $(SERVICE_NAME) $(SERVICE_NAME):$(TAG)
+	docker cp $(SERVICE_NAME):$(CONTAINER_WORKDIR)/api $(SERVICE_PATH)

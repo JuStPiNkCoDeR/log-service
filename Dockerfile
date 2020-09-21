@@ -1,5 +1,5 @@
 # Image for test and build service
-FROM golang:1.13
+FROM golang:1.13 AS build
 
 # Protoc(RPC protocol buffer) installation
 # See https://grpc.io/docs/languages/go/quickstart/

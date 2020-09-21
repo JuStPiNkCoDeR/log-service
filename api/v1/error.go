@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"mafia/log/lib"
+	"log/lib"
 )
 
 type ErrOffsetOutOfRange struct {
