@@ -9,6 +9,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/peer"
+	"google.golang.org/grpc/health"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpcAuth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
@@ -87,6 +89,11 @@ func NewGRPCServer(config *Config, opts ...grpc.ServerOption) (*grpc.Server, err
 		grpcAuth.UnaryServerInterceptor(authenticate),
 	)))
 	gSrv := grpc.NewServer(opts...)
+
+	hSrv := health.NewServer()
+	hSrv.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+	healthpb.RegisterHealthServer(gSrv, hSrv)
+
 	srv, err := newGrpcServer(config)
 	if err != nil {
 		return nil, lib.Wrap(err, "Unable to create grpc server wrapper")
