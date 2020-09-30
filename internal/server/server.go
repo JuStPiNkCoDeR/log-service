@@ -32,9 +32,14 @@ type Authorizer interface {
 	Authorize(subject, object, action string) error
 }
 
+type GetServerer interface {
+	GetServers() ([]*api.Server, error)
+}
+
 type Config struct {
-	CommitLog  CommitLog
-	Authorizer Authorizer
+	CommitLog   CommitLog
+	Authorizer  Authorizer
+	GetServerer GetServerer
 }
 
 type subjectContextKey struct{}
@@ -178,4 +183,16 @@ func (s *grpcServer) ProduceStream(stream api.Log_ProduceStreamServer) error {
 			return lib.Wrap(err, "Unable to send response via stream")
 		}
 	}
+}
+
+// Returns data about every server at the cluster
+func (s *grpcServer) GetServers(
+	_ context.Context, _ *api.GetServersRequest,
+) (*api.GetServersResponse, error) {
+	servers, err := s.GetServerer.GetServers()
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.GetServersResponse{Servers: servers}, nil
 }
