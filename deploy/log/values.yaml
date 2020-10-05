@@ -5,10 +5,15 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: justpinkcoder/logs
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: 0.0.1
+
+serfPort: 8401
+rpcPort: 8400
+replicas: 3
+storage: 1Gi
 
 imagePullSecrets: []
 nameOverride: ""
@@ -55,7 +60,7 @@ ingress:
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
+  # choice for the user. This also increases chances charts deploy on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:

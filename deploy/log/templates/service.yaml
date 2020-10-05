@@ -2,14 +2,21 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "log.fullname" . }}
-  labels:
-    {{- include "log.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{ include "log.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  clusterIP: None
+  publishNotReadyAddresses: true
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.rpcPort }}
+      targetPort: {{ .Values.rpcPort }}
+      name: rpc
+    - port: {{ .Values.serfPort }}
+      targetPort: {{ .Values.serfPort }}
       protocol: TCP
-      name: http
-  selector:
-    {{- include "log.selectorLabels" . | nindent 4 }}
+      name: serf-tcp
+    - port: {{ .Values.serfPort }}
+      targetPort: {{ .Values.serfPort }}
+      protocol: UDP
+      name: serf-udp
+  selector: {{ include "log.selectorLabels" . | nindent 4 }}

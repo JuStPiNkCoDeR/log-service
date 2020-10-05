@@ -14,6 +14,7 @@ GO_CLEAN=$(GO_CMD) clean
 GO_TEST=$(GO_CMD) test
 GO_GET=$(GO_CMD) get
 CONTAINER_WORKDIR=/go/src/app
+CONTAINER_BIN_DIR=/go/bin
 CONTAINER_BUILD_NAME=$(SERVICE_NAME)-builder
 CONFIG_PATH=${HOME}/.config
 TAG ?= 0.0.1
@@ -107,13 +108,21 @@ lint-docker:
 		golangci-lint run -v
 build-linux:
 	echo "Building for linux..."
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO_BUILD) -v -o /go/bin/app ./cmd/log
-build-and-run-docker:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO_BUILD) -v -o $(CONTAINER_BIN_DIR)/app ./cmd/log
+build-docker:
 	echo "Building in docker..."
-	cp -r $(LIB_PATH) $(SERVICE_PATH) \
-    	&& rm $(SERVICE_PATH)/lib/go.mod \
-    	&& rm $(SERVICE_PATH)/lib/go.sum
-	docker build -t $(SERVICE_NAME):$(TAG) .
+	cp -r $(LIB_PATH) $(SERVICE_PATH)
+	docker build \
+		-f $(SERVICE_PATH)/docker/build/Dockerfile \
+		-t $(CONTAINER_BUILD_NAME):$(TAG) \
+		.
 	docker run -td \
-		--name $(SERVICE_NAME) $(SERVICE_NAME):$(TAG)
-	docker cp $(SERVICE_NAME):$(CONTAINER_WORKDIR)/api $(SERVICE_PATH)
+		--name $(CONTAINER_BUILD_NAME) $(CONTAINER_BUILD_NAME):$(TAG)
+	docker cp $(CONTAINER_BUILD_NAME):$(CONTAINER_WORKDIR)/api $(SERVICE_PATH)
+	docker cp $(CONTAINER_BUILD_NAME):$(CONTAINER_BIN_DIR)/app $(SERVICE_PATH)/docker/build/bin
+	docker rm -f $(CONTAINER_BUILD_NAME)
+run-docker:
+	echo "Running in docker..."
+	docker build \
+    	-f $(SERVICE_PATH)/docker/deploy/Dockerfile \
+    	-t $(SERVICE_NAME):$(TAG)
