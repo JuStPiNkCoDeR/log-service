@@ -7,7 +7,6 @@ include .env
 ###########################
 SERVICE_PATH=$(PWD)
 SERVICE_NAME=$(shell basename $(SERVICE_PATH))
-LIB_PATH=$(SERVICE_PATH)/../../lib
 GO_CMD=go
 GO_BUILD=$(GO_CMD) build
 GO_CLEAN=$(GO_CMD) clean
@@ -111,7 +110,6 @@ build-linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO_BUILD) -v -o $(CONTAINER_BIN_DIR)/app ./cmd/log
 build-docker:
 	echo "Building in docker..."
-	cp -r $(LIB_PATH) $(SERVICE_PATH)
 	docker build \
 		-f $(SERVICE_PATH)/docker/build/Dockerfile \
 		-t $(CONTAINER_BUILD_NAME):$(TAG) \
